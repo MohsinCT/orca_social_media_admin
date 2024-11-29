@@ -1,0 +1,307 @@
+//   showDialog(
+//                                   context: context,
+//                                   builder: (context) {
+//                                     return AlertDialog(
+//                                       contentPadding: const EdgeInsets.all(16),
+//                                       shape: RoundedRectangleBorder(
+//                                         borderRadius: BorderRadius.circular(15),
+//                                       ),
+//                                       title: const Text(
+//                                         'Edit Course',
+//                                         style: TextStyle(
+//                                           fontSize: 24,
+//                                           fontWeight: FontWeight.bold,
+//                                         ),
+//                                       ),
+//                                       content: SingleChildScrollView(
+//                                         child: Column(
+//                                           mainAxisSize: MainAxisSize.min,
+//                                           crossAxisAlignment:
+//                                               CrossAxisAlignment.start,
+//                                           children: [
+//                                             const SizedBox(height: 20),
+
+//                                             // First image container for course image
+//                                             GestureDetector(
+//                                               onTap: () async {
+//                                                 loadingController
+//                                                     .setLoadingForCourseImage(
+//                                                         true);
+//                                                 await courseController
+//                                                     .pickimage(
+//                                                         ImageSource.gallery);
+//                                                 loadingController
+//                                                     .setLoadingForCourseImage(
+//                                                         false);
+//                                               },
+//                                               child: Obx(() {
+//                                                 return Container(
+//                                                     width:
+//                                                         mediaQuery.screenWidth *
+//                                                             0.3,
+//                                                     height: mediaQuery
+//                                                             .screenHeight *
+//                                                         0.2,
+//                                                     decoration: BoxDecoration(
+//                                                       color: Colors.grey[200],
+//                                                       borderRadius:
+//                                                           BorderRadius.circular(
+//                                                               12),
+//                                                       border: Border.all(
+//                                                           color: Colors.grey),
+//                                                     ),
+//                                                     child: loadingController
+//                                                             .isLoadingForCourseImage
+//                                                             .value
+//                                                         ? const Center(
+//                                                             child:
+//                                                                 CircularProgressIndicator())
+//                                                         : courseController
+//                                                                 .imagePath
+//                                                                 .isNotEmpty
+//                                                             ? Image.memory(
+//                                                                 base64Decode(
+//                                                                     courseController
+//                                                                         .imagePath
+//                                                                         .value),
+//                                                                 fit: BoxFit
+//                                                                     .cover,
+//                                                               )
+//                                                             : Image.network(
+//                                                                 course
+//                                                                     .imagePath)
+
+//                                                     //  const Icon(
+//                                                     //     Icons.add_a_photo,
+//                                                     //     size: 50,
+//                                                     //     color:
+//                                                     //         Colors.grey,
+//                                                     //   ),
+//                                                     );
+//                                               }),
+//                                             ),
+//                                             const SizedBox(height: 20),
+
+//                                             // Text field for adding course name
+//                                             TextFormField(
+//                                               controller: newCourseName,
+//                                               decoration:const  InputDecoration(
+//                                                 //labelText:"Course name",
+//                                                 border: OutlineInputBorder(),
+//                                               ),
+//                                             ),
+
+//                                             const Padding(
+//                                               padding: EdgeInsets.all(16),
+//                                               child: Divider(thickness: 5),
+//                                             ),
+
+//                                             // Second image container for category image
+
+//                                             // Video container
+//                                             GestureDetector(
+//                                               onTap: () async {
+//                                                 loadingController
+//                                                     .setLoadingForVideo(true);
+//                                                 await courseController
+//                                                     .pickLessonVideo(
+//                                                         ImageSource.gallery);
+//                                                 loadingController
+//                                                     .setLoadingForVideo(false);
+//                                               },
+//                                               child: Obx(() {
+//                                                 return Container(
+//                                                   width: double.infinity,
+//                                                   height: 150,
+//                                                   decoration: BoxDecoration(
+//                                                     color: Colors.grey[200],
+//                                                     borderRadius:
+//                                                         BorderRadius.circular(
+//                                                             12),
+//                                                     border: Border.all(
+//                                                         color: Colors.grey),
+//                                                   ),
+//                                                   child: loadingController
+//                                                           .isLoadingForVideo
+//                                                           .value
+//                                                       ? const Center(
+//                                                           child:
+//                                                               CircularProgressIndicator())
+//                                                       : courseController
+//                                                               .videoPath
+//                                                               .isNotEmpty
+//                                                           ? const Icon(
+//                                                               Icons.videocam,
+//                                                               size: 50,
+//                                                               color:
+//                                                                   Colors.blue,
+//                                                             )
+//                                                           : const Icon(
+//                                                               Icons.videocam,
+//                                                               size: 50,
+//                                                               color:
+//                                                                   Colors.grey,
+//                                                             ),
+//                                                 );
+//                                               }),
+//                                             ),
+
+//                                             const SizedBox(height: 20),
+
+//                                             TextFormField(
+//                                               controller:
+//                                                   courseController.lessonName,
+//                                               decoration: const InputDecoration(
+//                                                 labelText: 'Lesson name....',
+//                                                 border: OutlineInputBorder(),
+//                                               ),
+//                                             ),
+
+//                                             // Update and Clear buttons
+//                                             Row(
+//                                               mainAxisAlignment:
+//                                                   MainAxisAlignment
+//                                                       .spaceBetween,
+//                                               children: [
+//                                                 ElevatedButton(
+//                                                   onPressed: () {
+//                                                     courseController
+//                                                         .resetImage();
+//                                                     courseController
+//                                                         .resetVideo();
+//                                                     Navigator.of(context).pop();
+//                                                   },
+//                                                   child: const Text('Clear'),
+//                                                 ),
+//                                                 ElevatedButton(
+//                                                   onPressed: () async {
+//                                                     try {
+//                                                       if (courseController
+//                                                               .courseName
+//                                                               .text
+//                                                               .isNotEmpty &&
+//                                                           courseController
+//                                                               .imagePath
+//                                                               .isNotEmpty &&
+//                                                           courseController
+//                                                               .categoryImage
+//                                                               .isNotEmpty &&
+//                                                           courseController
+//                                                               .categoryBasedCourseName
+//                                                               .text
+//                                                               .isNotEmpty &&
+//                                                           courseController
+//                                                               .categoryName
+//                                                               .text
+//                                                               .isNotEmpty &&
+//                                                           courseController
+//                                                               .videoPath
+//                                                               .isNotEmpty &&
+//                                                           courseController
+//                                                               .lessonsCount
+//                                                               .text
+//                                                               .isNotEmpty &&
+//                                                           courseController
+//                                                               .lessonName
+//                                                               .text
+//                                                               .isNotEmpty) {
+//                                                         // Show the loading dialog
+//                                                         showDialog(
+//                                                           context: context,
+//                                                           barrierDismissible:
+//                                                               false, // Prevent closing the dialog by tapping outside
+//                                                           builder: (context) =>
+//                                                             const  AlertDialog(
+//                                                             title:  Text(
+//                                                                 'Updating Course'),
+//                                                             content: Row(
+//                                                               children: [
+//                                                                  CircularProgressIndicator(),
+//                                                                  SizedBox(
+//                                                                     width: 20),
+//                                                                  Expanded(
+//                                                                     child: Text(
+//                                                                         'Please wait...')),
+//                                                               ],
+//                                                             ),
+//                                                           ),
+//                                                         );
+
+//                                                         // Attempt to update the course
+//                                                         await courseController
+//                                                             .updateCourse(
+//                                                                 course.id,
+//                                                                 context);
+
+//                                                         // Close the loading dialog after updating the course
+//                                                         Navigator.of(context)
+//                                                             .pop();
+
+//                                                         // Close the edit course screen
+//                                                         Navigator.of(context)
+//                                                             .pop();
+//                                                       } else {
+//                                                         // Show a dialog if any required field is missing
+//                                                         showDialog(
+//                                                           barrierDismissible:
+//                                                               false,
+//                                                           context: context,
+//                                                           builder: (context) =>
+//                                                               AlertDialog(
+//                                                             title: const Text(
+//                                                                 'Missing Information'),
+//                                                             content: const Text(
+//                                                                 'Please fill in all fields before updating the course.'),
+//                                                             actions: [
+//                                                               TextButton(
+//                                                                 onPressed: () =>
+//                                                                     Navigator.of(
+//                                                                             context)
+//                                                                         .pop(),
+//                                                                 child:
+//                                                                     const Text(
+//                                                                         'OK'),
+//                                                               ),
+//                                                             ],
+//                                                           ),
+//                                                         );
+//                                                       }
+//                                                     } catch (e) {
+//                                                       // Close the loading dialog if it’s still open
+//                                                       Navigator.of(context)
+//                                                           .pop();
+
+//                                                       // Display the error in a dialog
+//                                                       showDialog(
+//                                                         barrierDismissible:
+//                                                             false,
+//                                                         context: context,
+//                                                         builder: (context) =>
+//                                                             AlertDialog(
+//                                                           title: const Text(
+//                                                               'Error'),
+//                                                           content: Text(
+//                                                               'An error occurred: $e'),
+//                                                           actions: [
+//                                                             TextButton(
+//                                                               onPressed: () =>
+//                                                                   Navigator.of(
+//                                                                           context)
+//                                                                       .pop(),
+//                                                               child: const Text(
+//                                                                   'OK'),
+//                                                             ),
+//                                                           ],
+//                                                         ),
+//                                                       );
+//                                                     }
+//                                                   },
+//                                                   child: const Text('Update'),
+//                                                 )
+//                                               ],
+//                                             ),
+//                                           ],
+//                                         ),
+//                                       ),
+//                                     );
+//                                   });

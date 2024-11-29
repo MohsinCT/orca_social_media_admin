@@ -1,0 +1,90 @@
+{
+  "project_info": {
+    "project_number": "46291325751",
+    "project_id": "orca-socialmedia-e8c58",
+    "storage_bucket": "orca-socialmedia-e8c58.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:46291325751:android:6ca589c3ee483a523ec0b2",
+        "android_client_info": {
+          "package_name": "com.example.orca_social_media"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "46291325751-ot178ocicdoeur94pf7f6dkm8jfbdck8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.orca_social_media",
+            "certificate_hash": "24f171d8546011b2b7707c040dcec3d148b6197d"
+          }
+        },
+        {
+          "client_id": "46291325751-3sdel30085o34rf518rbs8cnk2om6c9n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDhwzjk5LAimeiysNdCn9zgFNP-Ejnita8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "46291325751-3sdel30085o34rf518rbs8cnk2om6c9n.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "46291325751-aecopp6i20fp2rg4du1qqbuhcu67r5qc.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.orcaSocialMedia"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:46291325751:android:bade1315ce0c78a33ec0b2",
+        "android_client_info": {
+          "package_name": "com.example.orca_social_media_admin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "46291325751-3sdel30085o34rf518rbs8cnk2om6c9n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDhwzjk5LAimeiysNdCn9zgFNP-Ejnita8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "46291325751-3sdel30085o34rf518rbs8cnk2om6c9n.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "46291325751-aecopp6i20fp2rg4du1qqbuhcu67r5qc.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.orcaSocialMedia"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
