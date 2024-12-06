@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 // ignore: avoid_web_libraries_in_flutter
-import 'dart:html' as html;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -10,6 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:orca_social_media_admin/constants/media_query.dart';
 import 'package:orca_social_media_admin/controller/web/loading_controller.dart';
 import 'package:orca_social_media_admin/controller/Firebase/upcoming_courses_controller.dart';
+import 'package:orca_social_media_admin/view/widgets/custom_close_button.dart';
 
 // ignore: use_key_in_widget_constructors
 class AddUpComingCourseDialog extends StatelessWidget {
@@ -25,13 +25,12 @@ class AddUpComingCourseDialog extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15),
       ),
-      title: const Text(
-        'Add Upcoming Course',
-        style: TextStyle(
-          fontSize: 24,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
+      title: CustomCloseButton(text: 'Add Upcoming Course', onPressed: (){
+        upCoursesController.courseName.clear();
+                    upCoursesController.courseDetails.clear();
+                    upCoursesController.resetImage();
+                    Get.back();
+      }),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -85,19 +84,12 @@ class AddUpComingCourseDialog extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            Row(
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    upCoursesController.courseName.clear();
-                    upCoursesController.courseDetails.clear();
-                    upCoursesController.resetImage();
-                    Get.back();
-                  },
-                  child: const Text('Clear'),
-                ),
-                const SizedBox(width: 10), // Space between buttons
-                ElevatedButton(
+          
+          ],
+        ),
+      ),
+      actions: [
+         ElevatedButton(
                     onPressed: () async {
                       try {
                         if (upCoursesController.courseName.text.isNotEmpty &&
@@ -124,6 +116,7 @@ class AddUpComingCourseDialog extends StatelessWidget {
 
                           Get.back();
 
+                          // ignore: use_build_context_synchronously
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                               content: Text(
@@ -132,7 +125,7 @@ class AddUpComingCourseDialog extends StatelessWidget {
                             ),
                           );
 
-                          html.window.location.reload(); // Close the dialog
+                        
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
@@ -147,11 +140,7 @@ class AddUpComingCourseDialog extends StatelessWidget {
                       }
                     },
                     child: const Text('Add'))
-              ],
-            ),
-          ],
-        ),
-      ),
+      ],
     );
   }
 }

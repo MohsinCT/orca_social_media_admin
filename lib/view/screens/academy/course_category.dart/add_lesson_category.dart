@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 
 import 'package:orca_social_media_admin/controller/Firebase/course_controller.dart';
 import 'package:orca_social_media_admin/controller/web/loading_controller.dart';
+import 'package:orca_social_media_admin/view/widgets/custom_close_button.dart';
 
 class AddLessonCategory extends StatelessWidget {
   final LoadingController loadingController = Get.put(LoadingController());
@@ -23,13 +24,12 @@ class AddLessonCategory extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15),
       ),
-      title: const Text(
-        'Add lesson',
-        style: TextStyle(
-          fontSize: 24,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
+      title: CustomCloseButton(text: 'Add Lesson', onPressed: (){
+        courseController.resetVideo();
+                  courseController.lessonName.clear();
+                  Get.back();
+
+      }),
       content: SingleChildScrollView(
           child: Column(children: [
         GestureDetector(
@@ -71,18 +71,9 @@ class AddLessonCategory extends StatelessWidget {
             border: OutlineInputBorder(),
           ),
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            ElevatedButton(
-                onPressed: () {
-                  courseController.resetVideo();
-                  courseController.lessonName.clear();
-
-                  Navigator.of(context).pop();
-                },
-                child: const Text('Clear')),
-            ElevatedButton(
+      ])),
+      actions: [
+        ElevatedButton(
               onPressed: () async {
                 try {
                   if (courseController.videoPath.isNotEmpty &&
@@ -103,8 +94,8 @@ class AddLessonCategory extends StatelessWidget {
                     await courseController.addLessonsToCategory(
                         context, courseid, categoryid);
                     // ignore: use_build_context_synchronously
-                    Navigator.of(context).pop();
-                    Navigator.of(context).pop();
+                    Get.back();
+                    Get.back();
                   }
                 } catch (e) {
                   log('Error lesson $e');
@@ -112,9 +103,8 @@ class AddLessonCategory extends StatelessWidget {
               },
               child: const Text('Add'),
             ),
-          ],
-        ),
-      ])),
+
+      ],
     );
   }
 }

@@ -6,6 +6,7 @@ class LoadingController extends GetxController {
   var isLoadingForCategoryImage = false.obs;
   var isLoadingForVideo = false.obs;
   var isLoadingForUpcomingCourseImage = false.obs;
+  
 
   
 

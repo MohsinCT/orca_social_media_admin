@@ -11,7 +11,7 @@ import 'package:orca_social_media_admin/controller/web/textfiled_controller.dart
 import 'package:orca_social_media_admin/firebase_options.dart';
 
 import 'package:orca_social_media_admin/view/screens/academy/course_category.dart/course_categories.dart';
-import 'package:orca_social_media_admin/view/screens/academy/courses/carousel_details.dart';
+import 'package:orca_social_media_admin/view/screens/academy/upcoming_courses.dart/carousel_details.dart';
 import 'package:orca_social_media_admin/view/screens/admin_panel/admin_panel.dart';
 import 'package:orca_social_media_admin/view/screens/login/login.dart';
 

@@ -305,3 +305,38 @@
 //                                       ),
 //                                     );
 //                                   });
+
+
+
+
+
+Future<void> editUpcomingCourse(String id, BuildContext context) async {
+    try {
+      String? imageUrl;
+      if (imagePath.value.isNotEmpty) {
+        imageUrl = await uploadImageToFirebase();
+      }
+
+      Map<String, dynamic> updateData = {
+        'UpcomingCourseName': courseName.text,
+        'UpComingCourseDetails': courseDetails.text,
+      };
+
+      if (imageUrl != null) {
+        updateData['UpcomingCourseImage'] = imageUrl;
+      }
+
+      await upComingCourses.doc(id).update(updateData);
+
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Course updated successfully.')),
+      );
+    } catch (e) {
+      log('Error upcoming $e');
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: $e')),
+      );
+    }
+  }

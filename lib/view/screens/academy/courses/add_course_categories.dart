@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:html' as html;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:orca_social_media_admin/constants/media_query.dart';
 import 'package:orca_social_media_admin/controller/Firebase/course_controller.dart';
 import 'package:orca_social_media_admin/controller/web/loading_controller.dart';
+import 'package:orca_social_media_admin/view/widgets/custom_close_button.dart';
 
 class AddCourseCategories extends StatelessWidget {
   final CourseController courseController = Get.put(CourseController());
@@ -22,13 +22,15 @@ class AddCourseCategories extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15),
       ),
-      title: const Text(
-        'Add Category',
-        style: TextStyle(
-          fontSize: 24,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
+      title: CustomCloseButton(
+          text: 'Add Category',
+          onPressed: () {
+            courseController.resetImage();
+            courseController.categoryName.clear();
+            courseController.categoryBasedCourseName.clear();
+            courseController.lessonsCount.clear();
+            Get.back();
+          }),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -111,58 +113,44 @@ class AddCourseCategories extends StatelessWidget {
             const SizedBox(
               height: 30,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                ElevatedButton(
-                    onPressed: () async {
-                      courseController.resetImage();
-                      courseController.categoryName.clear();
-                      courseController.categoryBasedCourseName.clear();
-                      courseController.lessonsCount.clear();
-                      Get.back();
-                    },
-                    child: const Text('Clear')),
-                ElevatedButton(
-                    onPressed: () async {
-                      try {
-                        if (courseController.categoryImage.isNotEmpty &&
-                            courseController.categoryName.text.isNotEmpty &&
-                            courseController.lessonsCount.text.isNotEmpty &&
-                            courseController
-                                .categoryBasedCourseName.text.isNotEmpty) {
-                          showDialog(
-                              context: context,
-                              builder: (context) {
-                                return const AlertDialog(
-                                    title: Text('Adding new Category'),
-                                    content: Row(
-                                      children: [
-                                        CircularProgressIndicator(),
-                                        SizedBox(width: 20),
-                                        Expanded(child: Text('Please wait...')),
-                                      ],
-                                    ));
-                              });
-                          await courseController.addCategoryCourse(
-                              context, courseid);
-                          // ignore: use_build_context_synchronously
-                          Get.back();
-
-                          // Close the add course screen
-                          // ignore: use_build_context_synchronously
-                          Get.back();
-                        }
-                      } catch (e) {
-                        log('Error category course $e');
-                      }
-                    },
-                    child: const Text('Add'))
-              ],
-            )
           ],
         ),
       ),
+      actions: [
+        ElevatedButton(
+            onPressed: () async {
+              try {
+                if (courseController.categoryImage.isNotEmpty &&
+                    courseController.categoryName.text.isNotEmpty &&
+                    courseController.lessonsCount.text.isNotEmpty &&
+                    courseController.categoryBasedCourseName.text.isNotEmpty) {
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return const AlertDialog(
+                            title: Text('Adding new Category'),
+                            content: Row(
+                              children: [
+                                CircularProgressIndicator(),
+                                SizedBox(width: 20),
+                                Expanded(child: Text('Please wait...')),
+                              ],
+                            ));
+                      });
+                  await courseController.addCategoryCourse(context, courseid);
+                  // ignore: use_build_context_synchronously
+                  Get.back();
+
+                  // Close the add course screen
+                  // ignore: use_build_context_synchronously
+                  Get.back();
+                }
+              } catch (e) {
+                log('Error category course $e');
+              }
+            },
+            child: const Text('Add'))
+      ],
     );
   }
 }

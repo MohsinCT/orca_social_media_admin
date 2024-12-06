@@ -11,6 +11,7 @@ import 'package:orca_social_media_admin/controller/Firebase/course_controller.da
 import 'package:orca_social_media_admin/controller/web/loading_controller.dart';
 import 'package:orca_social_media_admin/model/course_category_model.dart';
 import 'package:orca_social_media_admin/model/course_model.dart';
+import 'package:orca_social_media_admin/view/screens/academy/course_category.dart/edit_course_category.dart';
 import 'package:orca_social_media_admin/view/screens/academy/course_category.dart/lessons.dart';
 import 'package:orca_social_media_admin/view/screens/academy/courses/add_course_categories.dart';
 import 'package:orca_social_media_admin/view/widgets/custom_add_button.dart';
@@ -154,12 +155,18 @@ class CourseCategories extends StatelessWidget {
                             children: [
                               IconButton(
                                 onPressed: () {
-                                  showEditCourseCategoryDialog(
-                                    context: context,
-                                    mediaQuery: mediaQuery,
-                                    loadingController: loadingController,
-                                    courseController: courseController,
-                                  );
+                                  showDialog(
+                                    barrierDismissible: false,
+                                      context: context,
+                                      builder: (_) => EditCourseCategory(
+                                          categoryId: category.id,
+                                          newCategoryName:
+                                              category.categoryName,
+                                          newCategorybaseCourseName:
+                                              category.categoryCourseName,
+                                          newLessonCount: category.lessonCount,
+                                          newCategoryImage:
+                                              category.categoryImage, courseId: course.id,));
                                 },
                                 icon: const Icon(Icons.edit),
                               ),
@@ -170,41 +177,30 @@ class CourseCategories extends StatelessWidget {
                                       builder: (context) {
                                         return AlertDialog(
                                           title: const Text('Are you sure'),
-                                          content: Row(
-                                            children: [
-                                              ElevatedButton(
-                                                  onPressed: () {
-                                                    Navigator.of(context).pop();
-                                                  },
-                                                  child: const Text('No')),
-                                              ElevatedButton(
-                                                  onPressed: () async {
-                                                    await courseController
-                                                        .deleteCategory(
-                                                            context,
-                                                            course.id,
-                                                            category.id);
-                                                    Get.back();
-
-                                                  },
-                                                  child: const Text('Yes'))
-                                            ],
-                                          ),
+                                          content: const Text(
+                                              'This will delete this....'),
+                                          actions: [
+                                            ElevatedButton(
+                                                onPressed: () {
+                                                  Get.back();
+                                                },
+                                                child: const Text('No')),
+                                            ElevatedButton(
+                                                onPressed: () async {
+                                                  await courseController
+                                                      .deleteCategory(
+                                                          context,
+                                                          course.id,
+                                                          category.id);
+                                                  Get.back();
+                                                },
+                                                child: const Text('Yes'))
+                                          ],
                                         );
                                       });
                                 },
                                 icon: const Icon(Icons.delete),
                               ),
-                              // DeleteButton(
-                              //     content:
-                              //         'This Action will permanently delete the category',
-                              //     onPressed: () async {
-                              //       await courseController.deleteCategory(
-                              //           context, course.id, category.id);
-
-                              //       Get.back();
-                                  
-                              //     })
                             ],
                           ),
                         ),

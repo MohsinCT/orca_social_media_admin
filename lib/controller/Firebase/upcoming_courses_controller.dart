@@ -22,9 +22,8 @@ class UpComingCoursesController extends GetxController {
 
   @override
   void onInit() {
-     fetchUpcomingCourses();
+    fetchUpcomingCourses();
     super.onInit();
-   
   }
 
   void updateImagePath(String path) {
@@ -76,27 +75,29 @@ class UpComingCoursesController extends GetxController {
 
   // ----------Fetch-----------
 
- Future<void> fetchUpcomingCourses() async {
-  try {
-    QuerySnapshot snapshot = await upComingCourses.get();
+  Future<void> fetchUpcomingCourses() async {
+    try {
+      QuerySnapshot snapshot = await upComingCourses.get();
 
-    // Parse each document into UpcomingCourseModel
-    upComingCourseList.value = snapshot.docs.map((doc) {
-      try {
-        return UpcomingCourseModel.fromDocument(doc);
-      } catch (e) {
-        log('Error parsing document ${doc.id}: $e');
-        return null; // Skip documents that cause errors
-      }
-    }).where((course) => course != null).cast<UpcomingCourseModel>().toList();
+      // Parse each document into UpcomingCourseModel
+      upComingCourseList.value = snapshot.docs
+          .map((doc) {
+            try {
+              return UpcomingCourseModel.fromDocument(doc);
+            } catch (e) {
+              log('Error parsing document ${doc.id}: $e');
+              return null; // Skip documents that cause errors
+            }
+          })
+          .where((course) => course != null)
+          .cast<UpcomingCourseModel>()
+          .toList();
 
-    log('Fetched ${upComingCourseList.length} upcoming courses.');
-  } catch (e) {
-    log('Failed to fetch upcoming courses: $e');
+      log('Fetched ${upComingCourseList.length} upcoming courses.');
+    } catch (e) {
+      log('Failed to fetch upcoming courses: $e');
+    }
   }
-}
-
-
 
   // ----------Create-----------
 
@@ -120,7 +121,6 @@ class UpComingCoursesController extends GetxController {
       );
     } catch (e) {
       log('Error upcoming $e');
-      
     }
   }
 
@@ -132,27 +132,47 @@ class UpComingCoursesController extends GetxController {
 
   Future<void> editUpcomingCourse(String id, BuildContext context) async {
     try {
-      String? imageUrl;
-      if (imagePath.value.isNotEmpty) {
-        imageUrl = await uploadImageToFirebase();
+      String? updatedImageUrl;
+
+      // Check if the user has selected a new image
+      if (imagePath.isNotEmpty) {
+        updatedImageUrl = await uploadImageToFirebase();
       }
 
-      Map<String, dynamic> updateData = {
-        'UpcomingCourseName': courseName.text,
-        'UpComingCourseDetails': courseDetails.text,
-      };
+      DocumentSnapshot upComingCourse = await upComingCourses.doc(id).get();
 
-      if (imageUrl != null) {
-        updateData['UpcomingCourseImage'] = imageUrl;
+      // Create updated data map
+      if (upComingCourse.exists) {
+        Map<String, dynamic> existingData =
+            upComingCourse.data() as Map<String, dynamic>;
+
+        // Include updated image URL if a new image was uploaded
+        UpcomingCourseModel updatedCourse = UpcomingCourseModel(
+            id: id,
+            upComingCourseImage:
+                updatedImageUrl ?? existingData['UpcomingCourseImage'],
+            upcomingCourseName: courseName.text.isNotEmpty
+                ? courseName.text
+                : existingData['UpcomingCourseName'],
+            upComingCourseDetails: courseDetails.text.isNotEmpty
+                ? courseDetails.text
+                : existingData['UpComingCourseDetails']);
+
+        await upComingCourses.doc(id).update(updatedCourse.toMap());
+        log('Upcoming course are updated');
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Course updated successfully.')),
+        );
+      } else {
+        log('upcoming course not found......');
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Upcoming course not found'),
+          backgroundColor: Colors.red,
+        ));
       }
-
-      await upComingCourses.doc(id).update(updateData);
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Course updated successfully.')),
-      );
     } catch (e) {
-      log('Error upcoming $e');
+      log('Failed to edit course: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error: $e')),
       );
@@ -165,10 +185,12 @@ class UpComingCoursesController extends GetxController {
     try {
       await upComingCourses.doc(id).delete();
 
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Course deleted successfully.')),
       );
     } catch (e) {
+      // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error: $e')),
       );

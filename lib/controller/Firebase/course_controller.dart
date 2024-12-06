@@ -223,12 +223,17 @@ class CourseController extends GetxController {
 
   Future<void> fetchNewCourses() async {
     try {
-      QuerySnapshot querySnapshot = await newCourse.get();
-      courseList.value = querySnapshot.docs
-          .map((doc) => CourseModel.fromDocument(doc))
-          .toList();
+      FirebaseFirestore.instance
+          .collection('NewCourse') // Your Firestore collection name
+          .snapshots() // Listen for real-time updates
+          .listen((QuerySnapshot querySnapshot) {
+        // Map the documents to CourseModel and update the observable list
+        courseList.value = querySnapshot.docs
+            .map((doc) => CourseModel.fromDocument(doc))
+            .toList();
+      });
     } catch (e) {
-      log('Error und fetch avnillla........$e');
+      log('Error in fetchNewCourses: $e');
     }
   }
 
@@ -281,7 +286,7 @@ class CourseController extends GetxController {
           courseName: courseName.text.isNotEmpty
               ? courseName.text
               : existingData['courseName'],
-          imagePath: imageUrl ?? existingData['imagePath'],
+          imagePath: imageUrl ?? existingData['image'],
         );
         await newCourse.doc(courseId).update(updatedCourse.toMap());
         log('Course updated');
@@ -324,22 +329,7 @@ class CourseController extends GetxController {
 
 //-------------------------CourseCategory----------------------------
 
-  // Future<void> fetchCategories(String courseId) async {
-  //   try {
-  //     DocumentReference courseRef = newCourse.doc(courseId);
-  //     CollectionReference categoryCollection =
-  //         courseRef.collection('Categories');
-
-  //     QuerySnapshot querySnapshot = await categoryCollection.get();
-  //     categories.value = querySnapshot.docs
-  //         .map((doc) => CourseCategoryModel.fromDocument(doc))
-  //         .toList();
-  //   } catch (e) {
-  //     log('Error fetching categories for course $courseId: $e');
-  //   }
-  // }
-
-  Stream<QuerySnapshot> getCategoriesStream(String courseId) {
+   Stream<QuerySnapshot> getCategoriesStream(String courseId) {
   DocumentReference courseRef = newCourse.doc(courseId);
   return courseRef.collection('Categories').snapshots();
 }
@@ -403,6 +393,60 @@ class CourseController extends GetxController {
       ));
     }
   }
+
+Future<void> editCategoryCourse(
+    BuildContext context, String courseId, String categoryId) async {
+  try {
+    // Reference to the specific category document
+    DocumentReference categoryRef =
+        newCourse.doc(courseId).collection('Categories').doc(categoryId);
+
+    // Upload new category image if it has been changed
+    String? newCategoryImageUrl;
+    if (imagePath.value.isNotEmpty) {
+      newCategoryImageUrl = await uploadCategoryImageToFirebase();
+    }
+
+    // Create a map of the updated data
+    Map<String, dynamic> updatedData = {
+      'categoryImage':categoryImage.value,
+      'categoryName': categoryName.text,
+      'lessonCount': int.tryParse(lessonsCount.text) ?? 0,
+      'categoryCourseName': categoryBasedCourseName.text,
+    };
+
+    // Only update the image if a new one was uploaded
+    if (newCategoryImageUrl != null) {
+      updatedData['categoryImage'] = newCategoryImageUrl;
+    }
+
+    // Update the category document
+    await categoryRef.update(updatedData);
+
+    log('Category updated successfully: $categoryId');
+
+    // Show success message
+    // ignore: use_build_context_synchronously
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      content: Text('Category updated successfully'),
+      backgroundColor: Colors.green,
+    ));
+
+    // Clear input fields after updating
+    categoryName.clear();
+    lessonsCount.clear();
+    categoryBasedCourseName.clear();
+    resetCategoryImage();
+  } catch (e) {
+    // Handle errors
+    log('Failed to update category: $e');
+    // ignore: use_build_context_synchronously
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text('Error updating category: $e'),
+      backgroundColor: Colors.red,
+    ));
+  }
+}
 
   Future<void> deleteCategory(
       BuildContext context, String courseId, String categoryId) async {

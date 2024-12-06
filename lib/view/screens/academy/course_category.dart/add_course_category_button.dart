@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:orca_social_media_admin/constants/media_query.dart';
 import 'package:orca_social_media_admin/controller/Firebase/course_controller.dart';
 import 'package:orca_social_media_admin/controller/web/loading_controller.dart';
+import 'package:orca_social_media_admin/view/widgets/custom_close_button.dart';
 
 
 // ignore: use_key_in_widget_constructors
@@ -20,13 +21,9 @@ class AddCourseCategoryDialog extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15),
       ),
-      title: const Text(
-        'Add Category',
-        style: TextStyle(
-          fontSize: 24,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
+      title: CustomCloseButton(text: 'Add Category', onPressed: (){
+        
+      }),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -115,7 +112,7 @@ class AddCourseCategoryDialog extends StatelessWidget {
               children: [
                 ElevatedButton(
                     onPressed: () {
-                      Navigator.of(context).pop();
+                     Get.back();
                     },
                     child: const Text('Clear')),
                 ElevatedButton(

@@ -2,7 +2,6 @@
 
 import 'dart:convert';
 import 'dart:io';
-import 'dart:html' as html;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +10,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:orca_social_media_admin/constants/media_query.dart';
 import 'package:orca_social_media_admin/controller/Firebase/course_controller.dart';
 import 'package:orca_social_media_admin/controller/web/loading_controller.dart';
+import 'package:orca_social_media_admin/view/widgets/custom_close_button.dart';
 import 'package:shimmer/shimmer.dart';
 
 class EditCourseDialog extends StatelessWidget {
@@ -37,13 +37,13 @@ class EditCourseDialog extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15),
       ),
-      title: const Text(
-        'Edit Course',
-        style: TextStyle(
-          fontSize: 24,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
+      title: CustomCloseButton(
+          text: 'Add Course',
+          onPressed: () {
+            courseController.courseName.clear();
+            courseController.resetImage();
+            Get.back();
+          }),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -69,7 +69,8 @@ class EditCourseDialog extends StatelessWidget {
                       : courseController.imagePath.isNotEmpty
                           ? ClipRRect(
                               borderRadius: BorderRadius.circular(12),
-                              child: _displayImage(newCourseImage))
+                              child: _displayImage(
+                                  courseController.imagePath.value))
                           : const Icon(
                               Icons.add_a_photo,
                               size: 50,
@@ -86,94 +87,83 @@ class EditCourseDialog extends StatelessWidget {
                 border: OutlineInputBorder(),
               ),
             ),
-            Row(
-              children: [
-                ElevatedButton(
-                    onPressed: () {
-                      courseController.courseName.clear();
-                      courseController.resetImage();
-                      Get.back();
-                    },
-                    child: const Text('Clear')),
-                ElevatedButton(
-                  onPressed: () async {
-                    try {
-                      if (courseController.courseName.text.isNotEmpty &&
-                          courseController.imagePath.isNotEmpty) {
-                        // Show the loading dialog
-                        showDialog(
-                          context: context,
-                          barrierDismissible:
-                              false, // Prevent closing the dialog by tapping outside
-                          builder: (context) => const AlertDialog(
-                            title: Text('Editing Course'),
-                            content: Row(
-                              children: [
-                                CircularProgressIndicator(),
-                                SizedBox(width: 20),
-                                Expanded(child: Text('Please wait...')),
-                              ],
-                            ),
-                          ),
-                        );
-
-                        await courseController.updateCourse(context, courseId);
-
-                        Get.back();
-
-                        Get.back();
-
-                        html.window.location.reload();
-                      } else {
-                        showDialog(
-                          barrierDismissible: false,
-                          context: context,
-                          builder: (context) => AlertDialog(
-                            title: const Text('Missing Information'),
-                            content: const Text(
-                                'Please fill in all fields before adding the course.'),
-                            actions: [
-                              TextButton(
-                                onPressed: () => Navigator.of(context).pop(),
-                                child: const Text('OK'),
-                              ),
-                            ],
-                          ),
-                        );
-                      }
-                    } catch (e) {
-                      Get.back();
-
-                      showDialog(
-                        barrierDismissible: false,
-                        // ignore: use_build_context_synchronously
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          title: const Text('Error'),
-                          content: Text('An error occurred: $e'),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Get.back(),
-                              child: const Text('OK'),
-                            ),
-                          ],
-                        ),
-                      );
-                    }
-                  },
-                  child: const Text('Edit'),
-                ),
-              ],
-            ),
           ],
         ),
       ),
+      actions: [
+        ElevatedButton(
+          onPressed: () async {
+            try {
+              if (courseController.courseName.text.isNotEmpty &&
+                  courseController.imagePath.isNotEmpty) {
+                // Show the loading dialog
+                showDialog(
+                  context: context,
+                  barrierDismissible:
+                      false, // Prevent closing the dialog by tapping outside
+                  builder: (context) => const AlertDialog(
+                    title: Text('Editing Course'),
+                    content: Row(
+                      children: [
+                        CircularProgressIndicator(),
+                        SizedBox(width: 20),
+                        Expanded(child: Text('Please wait...')),
+                      ],
+                    ),
+                  ),
+                );
+
+                await courseController.updateCourse(context, courseId);
+
+                Get.back();
+
+                Get.back();
+              } else {
+                showDialog(
+                  barrierDismissible: false,
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text('Missing Information'),
+                    content: const Text(
+                        'Please fill in all fields before adding the course.'),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Get.back,
+                        child: const Text('OK'),
+                      ),
+                    ],
+                  ),
+                );
+              }
+            } catch (e) {
+              Get.back();
+
+              showDialog(
+                barrierDismissible: false,
+                // ignore: use_build_context_synchronously
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: const Text('Error'),
+                  content: Text('An error occurred: $e'),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Get.back(),
+                      child: const Text('OK'),
+                    ),
+                  ],
+                ),
+              );
+            }
+          },
+          child: const Text('Edit'),
+        ),
+      ],
     );
   }
 }
 
 Widget _displayImage(String imagePath) {
-  const double aspectRatio = 1 / 1; // Set your desired aspect ratio here
+  const double aspectRatio = 16 / 9; // Set your desired aspect ratio here
 
   return AspectRatio(
     aspectRatio: aspectRatio,

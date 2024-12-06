@@ -7,8 +7,8 @@ import 'package:orca_social_media_admin/controller/Firebase/fetch_upcoming_cours
 import 'package:orca_social_media_admin/controller/web/loading_controller.dart';
 import 'package:orca_social_media_admin/controller/Firebase/upcoming_courses_controller.dart';
 import 'package:orca_social_media_admin/view/screens/academy/courses/add_course_dialog.dart';
-import 'package:orca_social_media_admin/view/screens/academy/courses/add_upcoming_course_dialog.dart';
-import 'package:orca_social_media_admin/view/screens/academy/courses/carousel_upcoming_course.dart';
+import 'package:orca_social_media_admin/view/screens/academy/upcoming_courses.dart/add_upcoming_course_dialog.dart';
+import 'package:orca_social_media_admin/view/screens/academy/upcoming_courses.dart/carousel_upcoming_course.dart';
 import 'package:orca_social_media_admin/view/screens/academy/courses/course_grid_view.dart';
 import 'package:orca_social_media_admin/view/widgets/custom_add_button.dart';
 

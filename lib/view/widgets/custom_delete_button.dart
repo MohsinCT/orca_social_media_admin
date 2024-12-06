@@ -2,15 +2,17 @@ import 'package:flutter/material.dart';
 
 class DeleteButton extends StatelessWidget {
   final String content;
-  final VoidCallback onPressed;
+  final VoidCallback conformButton;
+  final VoidCallback declineButton;
   const DeleteButton(
-      {super.key, required this.content, required this.onPressed});
+      {super.key, required this.content,  required this.conformButton, required this.declineButton});
 
   @override
   Widget build(BuildContext context) {
     return IconButton(
       onPressed: () async {
         showDialog(
+          barrierDismissible: false,
           context: context,
           builder: (context) {
             return AlertDialog(
@@ -31,9 +33,7 @@ class DeleteButton extends StatelessWidget {
               ),
               actions: [
                 ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
+                  onPressed: declineButton,
                   style: ElevatedButton.styleFrom(
                     // "No" button color
                     shape: RoundedRectangleBorder(
@@ -51,7 +51,7 @@ class DeleteButton extends StatelessWidget {
                   ),
                 ),
                 ElevatedButton.icon(
-                  onPressed: onPressed,
+                  onPressed: conformButton,
                   icon: const Icon(Icons.delete_forever, color: Colors.white),
                   label: const Text(
                     'Yes',
