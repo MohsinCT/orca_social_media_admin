@@ -25,12 +25,14 @@ class AddUpComingCourseDialog extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15),
       ),
-      title: CustomCloseButton(text: 'Add Upcoming Course', onPressed: (){
-        upCoursesController.courseName.clear();
-                    upCoursesController.courseDetails.clear();
-                    upCoursesController.resetImage();
-                    Get.back();
-      }),
+      title: CustomCloseButton(
+          text: 'Add Upcoming Course',
+          onPressed: () {
+            upCoursesController.courseName.clear();
+            upCoursesController.courseDetails.clear();
+            upCoursesController.resetImage();
+            Get.back();
+          }),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -84,62 +86,58 @@ class AddUpComingCourseDialog extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-          
           ],
         ),
       ),
       actions: [
-         ElevatedButton(
-                    onPressed: () async {
-                      try {
-                        if (upCoursesController.courseName.text.isNotEmpty &&
-                            upCoursesController.courseDetails.text.isNotEmpty &&
-                            upCoursesController.imagePath.isNotEmpty) {
-                          showDialog(
-                            context: context,
-                            barrierDismissible:
-                                false, // Prevent closing the dialog by tapping outside
-                            builder: (context) => const AlertDialog(
-                              title: Text('Adding New upcoming course'),
-                              content: Row(
-                                children: [
-                                  CircularProgressIndicator(),
-                                  SizedBox(width: 20),
-                                  Expanded(child: Text('Please wait...')),
-                                ],
-                              ),
-                            ),
-                          );
-                          await upCoursesController.addUpcomingCourses(context);
+        ElevatedButton(
+            onPressed: () async {
+              try {
+                if (upCoursesController.courseName.text.isNotEmpty &&
+                    upCoursesController.courseDetails.text.isNotEmpty &&
+                    upCoursesController.imagePath.isNotEmpty) {
+                  showDialog(
+                    context: context,
+                    barrierDismissible:
+                        false, // Prevent closing the dialog by tapping outside
+                    builder: (context) => const AlertDialog(
+                      title: Text('Adding New upcoming course'),
+                      content: Row(
+                        children: [
+                          CircularProgressIndicator(),
+                          SizedBox(width: 20),
+                          Expanded(child: Text('Please wait...')),
+                        ],
+                      ),
+                    ),
+                  );
+                  await upCoursesController.addUpcomingCourses(context);
 
-                          Get.back();
+                  Get.back();
 
-                          Get.back();
+                  Get.back();
 
-                          // ignore: use_build_context_synchronously
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text(
-                                  'Upcoming Courses are added. Check them in the User section.'),
-                              backgroundColor: Colors.green,
-                            ),
-                          );
-
-                        
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text(
-                                  'Please fill all fields and add an image.'),
-                              backgroundColor: Colors.red,
-                            ),
-                          );
-                        }
-                      } catch (e) {
-                        log('Error und......... upcoming course $e');
-                      }
-                    },
-                    child: const Text('Add'))
+                  // ignore: use_build_context_synchronously
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text(
+                          'Upcoming Courses are added. Check them in the User section.'),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Please fill all fields and add an image.'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
+              } catch (e) {
+                log('Error und......... upcoming course $e');
+              }
+            },
+            child: const Text('Add'))
       ],
     );
   }
